@@ -18,7 +18,18 @@ export default async function handler(req, res) {
 
     const data = await ghl.json();
 
-    res.status(200).json(data);
+  const opportunities = data.opportunities || [];
+
+const totalRevenue = opportunities.reduce((sum, opp) => {
+  return sum + (opp.monetaryValue || 0);
+}, 0);
+
+const totalDeals = opportunities.length;
+
+res.status(200).json({
+  totalRevenue,
+  totalDeals,
+}); 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
